@@ -26,7 +26,7 @@ import {
   MCP_TOOLS_TEMPLATE,
   ServiceProvider,
   StoreKey,
-  SUMMARIZE_MODEL,
+  SUMMARIZE_MODEL, LM_STUDIO_SUMMARIZE_MODEL,
 } from "../constant";
 import Locale, { getLang } from "../locales";
 import { prettyObject } from "../utils/format";
@@ -102,6 +102,10 @@ export const BOT_HELLO: ChatMessage = createMessage({
 });
 
 function createEmptySession(): ChatSession {
+  const mc = useAppConfig.getState().modelConfig;
+  if(!mc.providerName) {
+    mc.providerName = mc.providerName1;
+  }
   return {
     id: nanoid(),
     topic: DEFAULT_TOPIC,
@@ -146,6 +150,8 @@ function getSummarizeModel(
     return [GEMINI_SUMMARIZE_MODEL, ServiceProvider.Google];
   } else if (currentModel.startsWith("deepseek-")) {
     return [DEEPSEEK_SUMMARIZE_MODEL, ServiceProvider.DeepSeek];
+  } else if (currentModel.startsWith("qwen")) {
+    return [LM_STUDIO_SUMMARIZE_MODEL, ServiceProvider.LmStudio];
   }
 
   return [currentModel, providerName];
@@ -455,8 +461,13 @@ export const useChatStore = createPersistStore(
             botMessage,
           ]);
         });
+        if(!modelConfig.providerName) {
+          const m = DEFAULT_MODELS.find(m => m.name === modelConfig.model);
+          modelConfig.providerName = <ServiceProvider>m?.provider.providerName;
+        }
 
         const api: ClientApi = getClientApi(modelConfig.providerName);
+
         // make request
         api.llm.chat({
           messages: sendMessages,

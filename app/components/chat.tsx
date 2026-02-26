@@ -100,7 +100,7 @@ import {
 } from "./ui-lib";
 import { useNavigate } from "react-router-dom";
 import {
-  CHAT_PAGE_SIZE,
+  CHAT_PAGE_SIZE, DEFAULT_MODELS,
   DEFAULT_TTS_ENGINE,
   ModelProvider,
   Path,
@@ -524,6 +524,14 @@ export function ChatActions(props: {
   // stop all responses
   const couldStop = ChatControllerPool.hasPending();
   const stopAll = () => ChatControllerPool.stopAll();
+
+  if(!session.mask.modelConfig.providerName) {
+    const m = DEFAULT_MODELS.find(m => m.name === session.mask.modelConfig.model);
+    if(m) {
+      // @ts-ignore
+      session.mask.modelConfig.providerName = m.provider.providerName;
+    }
+  }
 
   // switch model
   const currentModel = session.mask.modelConfig.model;

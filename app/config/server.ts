@@ -76,6 +76,9 @@ declare global {
       DEEPSEEK_URL?: string;
       DEEPSEEK_API_KEY?: string;
 
+      LM_STUDIO_URL?: string;
+      LM_STUDIO_API_KEY?: string;
+
       // xai only
       XAI_URL?: string;
       XAI_API_KEY?: string;
@@ -236,8 +239,8 @@ export const getServerSideConfig = () => {
     deepseekApiKey: getApiKey(process.env.DEEPSEEK_API_KEY),
 
     isLmStudio,
-    lmStudioUrl: process.env.DEEPSEEK_URL,
-    lmStudioApiKey: getApiKey(process.env.DEEPSEEK_API_KEY),
+    lmStudioUrl: process.env.LM_STUDIO_URL,
+    lmStudioApiKey: getApiKey(process.env.LM_STUDIO_API_KEY),
 
     isXAI,
     xaiUrl: process.env.XAI_URL,

@@ -64,7 +64,7 @@ export const DEFAULT_CONFIG = {
   models: DEFAULT_MODELS as any as LLMModel[],
 
   modelConfig: {
-    model: "LmStudio" as ModelType,
+    model: "qwen8b" as ModelType,
     providerName: "LmStudio" as ServiceProvider,
     temperature: 0.5,
     top_p: 1,
@@ -95,7 +95,7 @@ export const DEFAULT_CONFIG = {
   realtimeConfig: {
     enable: false,
     provider: "LmStudio" as ServiceProvider,
-    model: "LmStudio",
+    model: "qwen8b" as ModelType,
     apiKey: "",
     azure: {
       endpoint: "",

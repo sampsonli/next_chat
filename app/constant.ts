@@ -432,6 +432,7 @@ You are an AI assistant with access to system tools. Your role is to help users 
 export const SUMMARIZE_MODEL = "gpt-4o-mini";
 export const GEMINI_SUMMARIZE_MODEL = "gemini-pro";
 export const DEEPSEEK_SUMMARIZE_MODEL = "deepseek-chat";
+export const LM_STUDIO_SUMMARIZE_MODEL = "qwen8b";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
   default: "2021-09",
@@ -521,7 +522,7 @@ const deepseekModels = ["deepseek-chat", "deepseek-coder", "deepseek-reasoner"];
 let seq = 1000; // 内置的模型序号生成器从1000开始
 export const DEFAULT_MODELS = [
   {
-    name: 'LmStudio',
+    name: 'qwen8b',
     available: true,
     sorted: 1,
     provider: {
