@@ -3,7 +3,7 @@ import {
   DEEPSEEK_BASE_URL,
   ApiPath,
   ModelProvider,
-  ServiceProvider,
+  ServiceProvider, LM_STUDIO_BASE_URL,
 } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
@@ -16,35 +16,38 @@ export async function handle(
   req: NextRequest,
   { params }: { params: { path: string[] } },
 ) {
-  console.log("[DeepSeek Route] params ", params);
+  console.log("[Lmstudio Route] params ", params);
 
   if (req.method === "OPTIONS") {
     return NextResponse.json({ body: "OK" }, { status: 200 });
   }
 
-  const authResult = auth(req, ModelProvider.DeepSeek);
+  const authResult = auth(req, ModelProvider.LmStudio);
+
   if (authResult.error) {
     return NextResponse.json(authResult, {
       status: 401,
     });
   }
+  console.log("[Lmstudio Route] authResult ", authResult);
 
   try {
     const response = await request(req);
     return response;
   } catch (e) {
-    console.error("[DeepSeek] ", e);
+    console.error("[LmStudio] ", e);
     return NextResponse.json(prettyObject(e));
   }
 }
 
 async function request(req: NextRequest) {
   const controller = new AbortController();
+  console.log("[Lmstudio Route1] request request", req);
 
   // alibaba use base url or just remove the path
-  let path = `${req.nextUrl.pathname}`.replaceAll(ApiPath.DeepSeek, "");
+  let path = `${req.nextUrl.pathname}`.replaceAll(ApiPath.LmStudio, "");
 
-  let baseUrl = serverConfig.deepseekUrl || DEEPSEEK_BASE_URL;
+  let baseUrl = serverConfig.lmStudioUrl || LM_STUDIO_BASE_URL;
 
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;

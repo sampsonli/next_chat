@@ -77,9 +77,9 @@ export const ALL_LANG_OPTIONS: Record<Lang, string> = {
 };
 
 const LANG_KEY = "lang";
-const DEFAULT_LANG = "en";
+const DEFAULT_LANG = "cn";
 
-const fallbackLang = en;
+const fallbackLang = cn;
 const targetLang = ALL_LANGS[getLang()] as LocaleType;
 
 // if target lang missing some fields, it will use fallback lang string
@@ -98,6 +98,7 @@ function setItem(key: string, value: string) {
 function getLanguage() {
   try {
     const locale = new Intl.Locale(navigator.language).maximize();
+    // const locale = new Intl.Locale('zh-CN').maximize();
     const region = locale?.region?.toLowerCase();
     // 1. check region code in ALL_LANGS
     if (AllLangs.includes(region as Lang)) {
@@ -120,6 +121,7 @@ export function getLang(): Lang {
     return savedLang as Lang;
   }
 
+  console.log(getLanguage())
   return getLanguage();
 }
 

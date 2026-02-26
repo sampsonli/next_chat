@@ -164,6 +164,7 @@ export const getServerSideConfig = () => {
   const isMoonshot = !!process.env.MOONSHOT_API_KEY;
   const isIflytek = !!process.env.IFLYTEK_API_KEY;
   const isDeepSeek = !!process.env.DEEPSEEK_API_KEY;
+  const isLmStudio = !!process.env.LM_STUDIO_API_KEY || true;
   const isXAI = !!process.env.XAI_API_KEY;
   const isChatGLM = !!process.env.CHATGLM_API_KEY;
   const isSiliconFlow = !!process.env.SILICONFLOW_API_KEY;
@@ -233,6 +234,10 @@ export const getServerSideConfig = () => {
     isDeepSeek,
     deepseekUrl: process.env.DEEPSEEK_URL,
     deepseekApiKey: getApiKey(process.env.DEEPSEEK_API_KEY),
+
+    isLmStudio,
+    lmStudioUrl: process.env.DEEPSEEK_URL,
+    lmStudioApiKey: getApiKey(process.env.DEEPSEEK_API_KEY),
 
     isXAI,
     xaiUrl: process.env.XAI_URL,

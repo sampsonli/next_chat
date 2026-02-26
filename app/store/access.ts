@@ -51,6 +51,7 @@ const DEFAULT_STABILITY_URL = isApp ? STABILITY_BASE_URL : ApiPath.Stability;
 const DEFAULT_IFLYTEK_URL = isApp ? IFLYTEK_BASE_URL : ApiPath.Iflytek;
 
 const DEFAULT_DEEPSEEK_URL = isApp ? DEEPSEEK_BASE_URL : ApiPath.DeepSeek;
+const DEFAULT_LM_STUDIO_URL = isApp ? DEEPSEEK_BASE_URL : ApiPath.LmStudio;
 
 const DEFAULT_XAI_URL = isApp ? XAI_BASE_URL : ApiPath.XAI;
 
@@ -63,7 +64,7 @@ const DEFAULT_SILICONFLOW_URL = isApp
 const DEFAULT_AI302_URL = isApp ? AI302_BASE_URL : ApiPath["302.AI"];
 
 const DEFAULT_ACCESS_STATE = {
-  accessCode: "",
+  accessCode: "123456",
   useCustomConfig: false,
 
   provider: ServiceProvider.OpenAI,
@@ -122,6 +123,10 @@ const DEFAULT_ACCESS_STATE = {
   // deepseek
   deepseekUrl: DEFAULT_DEEPSEEK_URL,
   deepseekApiKey: "",
+
+ // lmStudio
+ lmStudioUrl: DEFAULT_LM_STUDIO_URL,
+ lmStudioApiKey: "",
 
   // xai
   xaiUrl: DEFAULT_XAI_URL,
@@ -213,6 +218,10 @@ export const useAccessStore = createPersistStore(
     isValidDeepSeek() {
       return ensure(get(), ["deepseekApiKey"]);
     },
+  isValidLmStudio() {
+      return ensure(get(), ["lmStudioApiKey"]);
+  },
+
 
     isValidXAI() {
       return ensure(get(), ["xaiApiKey"]);

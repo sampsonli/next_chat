@@ -25,6 +25,7 @@ import { XAIApi } from "./platforms/xai";
 import { ChatGLMApi } from "./platforms/glm";
 import { SiliconflowApi } from "./platforms/siliconflow";
 import { Ai302Api } from "./platforms/ai302";
+import {LmStudioApi} from "./platforms/lmstudio";
 
 export const ROLES = ["system", "user", "assistant"] as const;
 export type MessageRole = (typeof ROLES)[number];
@@ -165,6 +166,9 @@ export class ClientApi {
       case ModelProvider.DeepSeek:
         this.llm = new DeepSeekApi();
         break;
+      case ModelProvider.LmStudio:
+        this.llm = new LmStudioApi();
+        break;
       case ModelProvider.XAI:
         this.llm = new XAIApi();
         break;
@@ -265,6 +269,7 @@ export function getHeaders(ignoreHeaders: boolean = false) {
     const isMoonshot = modelConfig.providerName === ServiceProvider.Moonshot;
     const isIflytek = modelConfig.providerName === ServiceProvider.Iflytek;
     const isDeepSeek = modelConfig.providerName === ServiceProvider.DeepSeek;
+    const isLmStudio = modelConfig.providerName === ServiceProvider.LmStudio;
     const isXAI = modelConfig.providerName === ServiceProvider.XAI;
     const isChatGLM = modelConfig.providerName === ServiceProvider.ChatGLM;
     const isSiliconFlow =
@@ -287,6 +292,8 @@ export function getHeaders(ignoreHeaders: boolean = false) {
       ? accessStore.xaiApiKey
       : isDeepSeek
       ? accessStore.deepseekApiKey
+      : isLmStudio
+      ? accessStore.lmStudioApiKey
       : isChatGLM
       ? accessStore.chatglmApiKey
       : isSiliconFlow
@@ -308,6 +315,7 @@ export function getHeaders(ignoreHeaders: boolean = false) {
       isMoonshot,
       isIflytek,
       isDeepSeek,
+      isLmStudio,
       isXAI,
       isChatGLM,
       isSiliconFlow,
@@ -385,6 +393,8 @@ export function getClientApi(provider: ServiceProvider): ClientApi {
       return new ClientApi(ModelProvider.Iflytek);
     case ServiceProvider.DeepSeek:
       return new ClientApi(ModelProvider.DeepSeek);
+    case ServiceProvider.LmStudio:
+      return new ClientApi(ModelProvider.LmStudio);
     case ServiceProvider.XAI:
       return new ClientApi(ModelProvider.XAI);
     case ServiceProvider.ChatGLM:

@@ -650,13 +650,13 @@ export function ChatActions(props: {
           icon={<PromptIcon />}
         />
 
-        <ChatAction
+       {/* <ChatAction
           onClick={() => {
             navigate(Path.Masks);
           }}
           text={Locale.Chat.InputActions.Masks}
           icon={<MaskIcon />}
-        />
+        />*/}
 
         <ChatAction
           text={Locale.Chat.InputActions.Clear}
@@ -1849,7 +1849,7 @@ function _Chat() {
                                 ></IconButton>
                               </div>
                               {isUser ? (
-                                <Avatar avatar={config.avatar} />
+                                <Avatar avatar={'2699-fe0f'} />
                               ) : (
                                 <>
                                   {["system"].includes(message.role) ? (
