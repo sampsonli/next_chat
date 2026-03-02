@@ -46,7 +46,7 @@ export const DEFAULT_CONFIG = {
   fontSize: 14,
   fontFamily: "",
   theme: Theme.Auto as Theme,
-  tightBorder: !!config?.isApp||true,
+  tightBorder: !!config?.isApp,
   sendPreviewBubble: true,
   enableAutoGenerateTitle: true,
   sidebarWidth: DEFAULT_SIDEBAR_WIDTH,
@@ -64,8 +64,8 @@ export const DEFAULT_CONFIG = {
   models: DEFAULT_MODELS as any as LLMModel[],
 
   modelConfig: {
-    model: "qwen8b" as ModelType,
-    providerName: "LmStudio" as ServiceProvider,
+    model: "deepseek-chat" as ModelType,
+    providerName: "DeepSeek" as ServiceProvider,
     temperature: 0.5,
     top_p: 1,
     max_tokens: 4000,
@@ -94,8 +94,8 @@ export const DEFAULT_CONFIG = {
 
   realtimeConfig: {
     enable: false,
-    provider: "LmStudio" as ServiceProvider,
-    model: "qwen8b" as ModelType,
+    provider: "DeepSeek" as ServiceProvider,
+    model: "deepseek-chat" as ModelType,
     apiKey: "",
     azure: {
       endpoint: "",

@@ -521,17 +521,7 @@ const deepseekModels = ["deepseek-chat", "deepseek-coder", "deepseek-reasoner"];
 
 let seq = 1000; // 内置的模型序号生成器从1000开始
 export const DEFAULT_MODELS = [
-  {
-    name: 'qwen8b',
-    available: true,
-    sorted: 1,
-    provider: {
-      id: "LmStudio",
-      providerName: "LmStudio",
-      providerType: "LmStudio",
-      sorted: 11,
-    },
-  },
+
 
   ...deepseekModels.map((name) => ({
     name,
@@ -544,6 +534,17 @@ export const DEFAULT_MODELS = [
       sorted: 13,
     },
   })),
+ /* {
+    name: 'qwen8b',
+    available: true,
+    sorted: 100,
+    provider: {
+      id: "LmStudio",
+      providerName: "LmStudio",
+      providerType: "LmStudio",
+      sorted: 19,
+    },
+  },*/
 ] as const;
 
 export const CHAT_PAGE_SIZE = 15;

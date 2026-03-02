@@ -102,10 +102,7 @@ export const BOT_HELLO: ChatMessage = createMessage({
 });
 
 function createEmptySession(): ChatSession {
-  const mc = useAppConfig.getState().modelConfig;
-  if(!mc.providerName) {
-    mc.providerName = mc.providerName1;
-  }
+
   return {
     id: nanoid(),
     topic: DEFAULT_TOPIC,

@@ -681,11 +681,11 @@ export function ChatActions(props: {
           }}
         />
 
-        <ChatAction
+       {/* <ChatAction
           onClick={() => setShowModelSelector(true)}
           text={currentModelName}
           icon={<RobotIcon />}
-        />
+        />*/}
 
         {showModelSelector && (
           <Selector
@@ -1863,20 +1863,22 @@ function _Chat() {
                                   {["system"].includes(message.role) ? (
                                     <Avatar avatar="2699-fe0f" />
                                   ) : (
-                                    <MaskAvatar
+                                    /*<MaskAvatar
                                       avatar={session.mask.avatar}
                                       model={
                                         message.model ||
                                         session.mask.modelConfig.model
                                       }
-                                    />
+                                    />*/
+                                      <Avatar avatar="2699-fe0f" />
                                   )}
                                 </>
                               )}
                             </div>
                             {!isUser && (
                               <div className={styles["chat-model-name"]}>
-                                {message.model}
+                                {/*{message.model}*/}
+                                工业机器人
                               </div>
                             )}
 
