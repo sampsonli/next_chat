@@ -26,7 +26,8 @@ import {
   MCP_TOOLS_TEMPLATE,
   ServiceProvider,
   StoreKey,
-  SUMMARIZE_MODEL, LM_STUDIO_SUMMARIZE_MODEL,
+  SUMMARIZE_MODEL,
+  LM_STUDIO_SUMMARIZE_MODEL,
 } from "../constant";
 import Locale, { getLang } from "../locales";
 import { prettyObject } from "../utils/format";
@@ -102,7 +103,6 @@ export const BOT_HELLO: ChatMessage = createMessage({
 });
 
 function createEmptySession(): ChatSession {
-
   return {
     id: nanoid(),
     topic: DEFAULT_TOPIC,
@@ -458,8 +458,8 @@ export const useChatStore = createPersistStore(
             botMessage,
           ]);
         });
-        if(!modelConfig.providerName) {
-          const m = DEFAULT_MODELS.find(m => m.name === modelConfig.model);
+        if (!modelConfig.providerName) {
+          const m = DEFAULT_MODELS.find((m) => m.name === modelConfig.model);
           modelConfig.providerName = <ServiceProvider>m?.provider.providerName;
         }
 
@@ -638,6 +638,11 @@ export const useChatStore = createPersistStore(
         }
         // concat all messages
         const recentMessages = [
+          createMessage({
+            role: "system",
+            content:
+              "你是Wattman工业视觉部门研发的炼铁智慧助手，具备对生产过程状态监测、设备故障定位、生产日报统计等专业能力。",
+          }),
           ...systemPrompts,
           ...longTermMemoryPrompts,
           ...contextPrompts,

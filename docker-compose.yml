@@ -9,4 +9,3 @@ services:
       - "3002:3002"
     working_dir: /usr/src/work/
     command: npm run build && npm run start
-
