@@ -11,6 +11,8 @@ import React, {
 
 import SendWhiteIcon from "../icons/send-white.svg";
 import BrainIcon from "../icons/brain.svg";
+import VoiceIcon from "../icons/voice.svg";
+import VoiceOffIcon from "../icons/voice-off.svg";
 import RenameIcon from "../icons/rename.svg";
 import EditIcon from "../icons/rename.svg";
 import ExportIcon from "../icons/share.svg";
@@ -21,7 +23,6 @@ import SpeakStopIcon from "../icons/speak-stop.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import LoadingButtonIcon from "../icons/loading.svg";
 import PromptIcon from "../icons/prompt.svg";
-import MaskIcon from "../icons/mask.svg";
 import MaxIcon from "../icons/max.svg";
 import MinIcon from "../icons/min.svg";
 import ResetIcon from "../icons/reload.svg";
@@ -40,7 +41,6 @@ import DarkIcon from "../icons/dark.svg";
 import AutoIcon from "../icons/auto.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
-import RobotIcon from "../icons/robot.svg";
 import SizeIcon from "../icons/size.svg";
 import QualityIcon from "../icons/hd.svg";
 import StyleIcon from "../icons/palette.svg";
@@ -100,7 +100,8 @@ import {
 } from "./ui-lib";
 import { useNavigate } from "react-router-dom";
 import {
-  CHAT_PAGE_SIZE, DEFAULT_MODELS,
+  CHAT_PAGE_SIZE,
+  DEFAULT_MODELS,
   DEFAULT_TTS_ENGINE,
   ModelProvider,
   Path,
@@ -109,7 +110,7 @@ import {
   UNFINISHED_INPUT,
 } from "../constant";
 import { Avatar } from "./emoji";
-import { ContextPrompts, MaskAvatar, MaskConfig } from "./mask";
+import { ContextPrompts, MaskConfig } from "./mask";
 import { useMaskStore } from "../store/mask";
 import { ChatCommandPrefix, useChatCommand, useCommand } from "../command";
 import { prettyObject } from "../utils/format";
@@ -525,9 +526,11 @@ export function ChatActions(props: {
   const couldStop = ChatControllerPool.hasPending();
   const stopAll = () => ChatControllerPool.stopAll();
 
-  if(!session.mask.modelConfig.providerName) {
-    const m = DEFAULT_MODELS.find(m => m.name === session.mask.modelConfig.model);
-    if(m) {
+  if (!session.mask.modelConfig.providerName) {
+    const m = DEFAULT_MODELS.find(
+      (m) => m.name === session.mask.modelConfig.model,
+    );
+    if (m) {
       // @ts-ignore
       session.mask.modelConfig.providerName = m.provider.providerName;
     }
@@ -658,7 +661,7 @@ export function ChatActions(props: {
           icon={<PromptIcon />}
         />
 
-       {/* <ChatAction
+        {/* <ChatAction
           onClick={() => {
             navigate(Path.Masks);
           }}
@@ -681,7 +684,7 @@ export function ChatActions(props: {
           }}
         />
 
-       {/* <ChatAction
+        {/* <ChatAction
           onClick={() => setShowModelSelector(true)}
           text={currentModelName}
           icon={<RobotIcon />}
@@ -1294,6 +1297,8 @@ function _Chat() {
   const accessStore = useAccessStore();
   const [speechStatus, setSpeechStatus] = useState(false);
   const [speechLoading, setSpeechLoading] = useState(false);
+  const [voiceInputStatus, setVoiceInputStatus] = useState(false);
+  const [voiceInputText, setVoiceInputText] = useState("");
 
   async function openaiSpeech(text: string) {
     if (speechStatus) {
@@ -1337,6 +1342,79 @@ function _Chat() {
         .finally(() => setSpeechLoading(false));
     }
   }
+
+  let recognition: any = null;
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && "webkitSpeechRecognition" in window) {
+      recognition = new (window as any).webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = "zh-CN";
+
+      recognition.onresult = (event: any) => {
+        let finalTranscript = "";
+        let interimTranscript = "";
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        if (finalTranscript) {
+          setVoiceInputText(finalTranscript);
+        } else if (interimTranscript) {
+          setVoiceInputText(interimTranscript);
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error("Speech recognition error:", event.error);
+        setVoiceInputStatus(false);
+        showToast("语音识别错误: " + event.error);
+      };
+
+      recognition.onend = () => {
+        if (voiceInputStatus) {
+          setVoiceInputStatus(false);
+          if (voiceInputText) {
+            setUserInput((prev) => prev + voiceInputText);
+            setVoiceInputText("");
+          }
+        }
+      };
+    }
+
+    return () => {
+      if (recognition) {
+        recognition.stop();
+      }
+    };
+  }, [voiceInputStatus, voiceInputText]);
+
+  const toggleVoiceInput = () => {
+    if (!recognition) {
+      showToast("您的浏览器不支持语音识别");
+      return;
+    }
+
+    if (voiceInputStatus) {
+      recognition.stop();
+      setVoiceInputStatus(false);
+      if (voiceInputText) {
+        setUserInput((prev) => prev + voiceInputText);
+        setVoiceInputText("");
+      }
+    } else {
+      recognition.start();
+      setVoiceInputStatus(true);
+      setVoiceInputText("");
+    }
+  };
 
   const context: RenderMessage[] = useMemo(() => {
     return session.mask.hideContext ? [] : session.mask.context.slice();
@@ -1857,7 +1935,7 @@ function _Chat() {
                                 ></IconButton>
                               </div>
                               {isUser ? (
-                                <Avatar avatar={'2699-fe0f'} />
+                                <Avatar avatar={"2699-fe0f"} />
                               ) : (
                                 <>
                                   {["system"].includes(message.role) ? (
@@ -1870,7 +1948,7 @@ function _Chat() {
                                         session.mask.modelConfig.model
                                       }
                                     />*/
-                                      <Avatar avatar="2699-fe0f" />
+                                    <Avatar avatar="2699-fe0f" />
                                   )}
                                 </>
                               )}
@@ -2126,6 +2204,17 @@ function _Chat() {
                     })}
                   </div>
                 )}
+                <IconButton
+                  icon={voiceInputStatus ? <VoiceOffIcon /> : <VoiceIcon />}
+                  text={
+                    voiceInputStatus
+                      ? Locale.Chat.InputActions.StopRecording
+                      : Locale.Chat.InputActions.VoiceInput
+                  }
+                  className={styles["chat-input-voice"]}
+                  bordered
+                  onClick={toggleVoiceInput}
+                />
                 <IconButton
                   icon={<SendWhiteIcon />}
                   text={Locale.Chat.Send}
